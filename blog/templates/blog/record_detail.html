@@ -1,0 +1,21 @@
+{% extends "blog/base.html" %}
+{% load media_shower %}
+{% block content %}
+
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ object.name }} ({{ object.slug }})</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title">{{ object.created_at }}</h1>
+                        <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            <li>{{ object.content }}</li>
+                            <li>Просмотров: {{ object.views_count }}</li>
+                            <li><img class="card-img-top" src="{% mymedia object.image %}"></li>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+
+{% endblock %}
