@@ -1,3 +1,5 @@
+from config import settings
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -34,6 +36,8 @@ class RecordDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
+        if self.object.views_count == 100:
+            send_mail('Поздравление', 'Твою запись посмотрели 100 раз!', settings.EMAIL_HOST_USER, ['dan14n97@gmail.com'])
         return self.object
 
 
