@@ -1,43 +1,37 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, TemplateView
 
-from catalog.models import Product
-
-
-# def contacts(request):
-#     if request.method == 'POST':
-#         # в переменной request хранится информация о методе, который отправлял пользователь
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         # а также передается информация, которую заполнил пользователь
-#         print(name)
-#         print(phone)
-#         print(message)
-#     content = {
-#         "title": "Контакты"
-#     }
-#     return render(request, 'catalog/contacts.html', content)
+from catalog.forms import ProductForm, VersionForm
+from catalog.models import Product, Version
 
 
 class ProductListView(ListView):
     model = Product
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['form'] = VersionForm(initial={'product_detail': self.kwargs.get('pk')})
+        return context_data
+
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ('name', 'description', 'image', 'category', 'price', 'created_at', 'updated_at')
+    form_class = ProductForm
     success_url = reverse_lazy('catalog:product_list')
 
 
 class ProductDetailView(DetailView):
     model = Product
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['form'] = VersionForm(initial={'product_detail': self.kwargs.get('pk')})
+        return context_data
+
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ('name', 'description', 'image', 'category', 'price', 'created_at', 'updated_at')
+    form_class = ProductForm
     success_url = reverse_lazy('catalog:product_list')
 
 
@@ -48,3 +42,12 @@ class ProductDeleteView(DeleteView):
 
 class ContactView(TemplateView):
     template_name = 'catalog/contacts.html'
+
+
+class VersionCreateView(CreateView):
+    model = Version
+    form_class = VersionForm
+    # success_url = reverse_lazy('catalog:product_detail')
+
+    def get_success_url(self):
+        return reverse('catalog:product_detail', args=[self.kwargs.get('pk')])

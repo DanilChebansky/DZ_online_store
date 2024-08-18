@@ -34,3 +34,19 @@ class Product(models.Model):
         verbose_name = 'продукт'  # Настройка для наименования одного объекта
         verbose_name_plural = 'продукты'  # Настройка для наименования набора объектов
         ordering = ('name',)
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='versions', verbose_name='Продукт')
+    version_number = models.IntegerField(verbose_name='Номер версии')
+    version_name = models.CharField(max_length=150, verbose_name='Название версии')
+    is_active = models.BooleanField(default=True, verbose_name='Текущая версия')
+
+    def __str__(self):
+        # Строковое отображение объекта
+        return f'{self.product} - версия {self.version_number} ({self.version_name})'
+
+    class Meta:
+        verbose_name = 'версия'  # Настройка для наименования одного объекта
+        verbose_name_plural = 'версии'  # Настройка для наименования набора объектов
+        ordering = ('version_number',)

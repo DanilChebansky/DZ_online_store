@@ -16,6 +16,11 @@
                         <ul class="list-unstyled mt-3 mb-4 text-start m-3">
                             <li>Category - {{ object.category }}</li>
                             <li>Description - {{ object.description }}</li>
+                            {% for vers_item in object.versions.all %}
+                            {% if vers_item.is_active and vers_item.product.pk == object.pk %}
+                            <li>Active version "{{ vers_item.version_number }} - {{ vers_item.version_name }}"</li>
+                            {% endif %}
+                            {% endfor %}
                             <li><img class="card-img-top" src="{% mymedia object.image %}"></li>
                         </ul>
                         <a class="btn my-2 btn-lg btn-block btn-outline-success" href = '{% url "catalog:product_detail" object.pk %}' role="button">Посмотреть</a>
