@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, BooleanField
+from django.forms import ModelForm, BooleanField, forms
 
 from catalog.models import Product, Version
 
@@ -21,20 +21,24 @@ class ProductForm(ModelForm, StyleFormMixin):
 
     def clean_name(self):
         cleaned_data = self.cleaned_data.get('name')
-        if cleaned_data in ['casino', 'cryptocurrency', 'crypt', 'stock market', 'cheap', 'free', 'fraud',
-                            'police', 'radar']:
-            raise ValidationError('Ошибка, связанная с именем продукта')
+        forbidden_lst = ['casino', 'cryptocurrency', 'crypt', 'stock market', 'cheap', 'free', 'fraud', 'police',
+                         'radar']
+        for word in forbidden_lst:
+            if word in cleaned_data.lower():
+                raise ValidationError('Ошибка, связанная с именем продукта')
         return cleaned_data
 
     def clean_description(self):
         cleaned_data = self.cleaned_data.get('description')
-        if cleaned_data in ['casino', 'cryptocurrency', 'crypt', 'stock market', 'cheap', 'free', 'fraud',
-                            'police', 'radar']:
-            raise ValidationError('Ошибка, связанная с описанием продукта')
+        forbidden_lst = ['casino', 'cryptocurrency', 'crypt', 'stock market', 'cheap', 'free', 'fraud', 'police',
+                         'radar']
+        for word in forbidden_lst:
+            if word in cleaned_data.lower():
+                raise ValidationError('Ошибка, связанная с описанием продукта')
         return cleaned_data
 
 
 class VersionForm(ModelForm, StyleFormMixin):
     class Meta:
         model = Version
-        fields = '__all__'
+        fields = "__all__"

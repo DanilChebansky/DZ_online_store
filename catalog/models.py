@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
@@ -23,8 +24,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/', verbose_name='Изображение(превью)', **NULLABLE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', verbose_name='Категория')
     price = models.IntegerField(verbose_name='Цена за покупку')
-    created_at = models.DateField(verbose_name='Дата создания')
-    updated_at = models.DateField(verbose_name='Дата последнего изменения')
+    created_at = models.DateField(verbose_name='Дата создания', auto_now_add=True)
+    updated_at = models.DateField(verbose_name='Дата последнего изменения', auto_now=True)
 
     def __str__(self):
         # Строковое отображение объекта
@@ -50,3 +51,15 @@ class Version(models.Model):
         verbose_name = 'версия'  # Настройка для наименования одного объекта
         verbose_name_plural = 'версии'  # Настройка для наименования набора объектов
         ordering = ('version_number',)
+
+    def clean(self):
+        if self.is_active and Version.objects.filter(
+                product=self.product, is_active=True
+        ).exclude(pk=self.pk).exists():
+            raise ValidationError(
+                'У этого продукта уже есть активная версия.'
+            )
+
+    def save(self, *args, **kwargs):
+        self.clean()  # вызываем clean перед сохранением
+        super().save(*args, **kwargs)
