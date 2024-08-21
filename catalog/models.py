@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from users.models import User
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -26,6 +27,7 @@ class Product(models.Model):
     price = models.IntegerField(verbose_name='Цена за покупку')
     created_at = models.DateField(verbose_name='Дата создания', auto_now_add=True)
     updated_at = models.DateField(verbose_name='Дата последнего изменения', auto_now=True)
+    user_owner = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.SET_NULL, **NULLABLE)
 
     def __str__(self):
         # Строковое отображение объекта
