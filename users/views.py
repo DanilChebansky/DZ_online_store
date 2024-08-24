@@ -1,7 +1,6 @@
 import secrets
 
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect

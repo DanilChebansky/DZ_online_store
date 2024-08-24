@@ -25,7 +25,9 @@
                             <li><img class="card-img-top" src="{% mymedia object.image %}"></li>
                         </ul>
                         <a class="btn my-2 btn-lg btn-block btn-outline-success" href = '{% url "catalog:product_detail" object.pk %}' role="button">Посмотреть</a>
+                        {% if perms.catalog.can_edit_category and perms.catalog.can_edit_description and perms.catalog.set_published or user == object.user_owner %}
                         <a class="btn my-2 btn-lg btn-block btn-outline-primary" href = '{% url "catalog:product_update" object.pk %}' role="button">Редактировать</a>
+                        {% endif %}
                         <a class="btn my-2 btn-lg btn-block btn-outline-danger" href = '{% url "catalog:product_delete" object.pk %}' role="button">Удалить</a>
                     </div>
             </div>
