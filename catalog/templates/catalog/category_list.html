@@ -1,0 +1,35 @@
+
+{% extends "catalog/base.html" %}
+{% load media_shower %}
+{% block content %}
+{% if user.is_authenticated %}
+<p class="text-center">
+    <a class="btn btn-lg btn-block btn-outline-success" href = '{% url "catalog:product_create" %}' role="button">Создать продукт</a>
+</p>
+{% for object in object_list %}
+        <div class="col-3">
+            <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">{{ object.name }}</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ object.description }}
+                    </div>
+            </div>
+        </div>
+{% endfor %}
+{% else %}
+<div class="col-3">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Ошибка авторизации</h4>
+        </div>
+        <div class="card-body">
+            Для просмотра продуктов Вам необходимо авторизоваться
+            <a class="btn my-2 btn-lg btn-block btn-outline-success" href = '{% url "users:login" %}' role="button">Войти</a>
+            <a class="btn my-2 btn-lg btn-block btn-outline-primary" href = '{% url "users:register" %}' role="button">Зарегистрироваться</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
